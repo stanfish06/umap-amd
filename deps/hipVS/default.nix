@@ -15,32 +15,34 @@
 }:
 let
   rocwmmaPatched = runCommand "rocwmma-gfx1103" { } ''
-    cp -r ${rocmPackages.rocwmma} $out; chmod -R u+w $out
-    substituteInPlace $out/include/rocwmma/internal/config.hpp \
-      --replace-fail '#elif defined(__gfx1102__) && ROCWMMA_DEVICE_COMPILE
-#define ROCWMMA_ARCH_GFX1102 __gfx1102__' '#elif defined(__gfx1102__) && ROCWMMA_DEVICE_COMPILE
-#define ROCWMMA_ARCH_GFX1102 __gfx1102__
-#elif defined(__gfx1103__) && ROCWMMA_DEVICE_COMPILE
-#define ROCWMMA_ARCH_GFX1102 1'
+        cp -r ${rocmPackages.rocwmma} $out; chmod -R u+w $out
+        substituteInPlace $out/include/rocwmma/internal/config.hpp \
+          --replace-fail '#elif defined(__gfx1102__) && ROCWMMA_DEVICE_COMPILE
+    #define ROCWMMA_ARCH_GFX1102 __gfx1102__' '#elif defined(__gfx1102__) && ROCWMMA_DEVICE_COMPILE
+    #define ROCWMMA_ARCH_GFX1102 __gfx1102__
+    #elif defined(__gfx1103__) && ROCWMMA_DEVICE_COMPILE
+    #define ROCWMMA_ARCH_GFX1102 1'
   '';
   rocmMerged = symlinkJoin {
     name = "rocm-merged-for-raft";
-    paths = with rocmPackages; [
-      clr
-      rocprim
-      rocsparse
-      rocthrust
-      hipcub
-      hiprand
-      rocrand
-      hipblas
-      hipblas-common
-      hipblaslt
-      hipsparse
-      hipsolver
-      rocblas
-    ]
-    ++ [ rocwmmaPatched ];
+    paths =
+      with rocmPackages;
+      [
+        clr
+        rocprim
+        rocsparse
+        rocthrust
+        hipcub
+        hiprand
+        rocrand
+        hipblas
+        hipblas-common
+        hipblaslt
+        hipsparse
+        hipsolver
+        rocblas
+      ]
+      ++ [ rocwmmaPatched ];
   };
   rocmdsCmake = fetchFromGitHub {
     owner = "ROCm-DS";
@@ -200,15 +202,15 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   postPatch = ''
-    export CXX=${rocmPackages.clr}/bin/hipcc
-    # Put the merged ROCm include tree on every target's include path so HIP
-    # sources find component headers (hiprand, rocrand, ...) that the HIP
-    # compiler root alone does not expose. Also override libhipcxx's guard that
-    # rejects chrono/timing APIs on the (unofficially supported) gfx1103 arch.
-    substituteInPlace CMakeLists.txt \
-      --replace-fail 'set(CMAKE_EXPORT_COMPILE_COMMANDS ON)' \
-                     'set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-include_directories(SYSTEM ${rocmMerged}/include)
-add_compile_definitions(_LIBCUDACXX_ALLOW_UNSUPPORTED_ARCHITECTURE)'
+        export CXX=${rocmPackages.clr}/bin/hipcc
+        # Put the merged ROCm include tree on every target's include path so HIP
+        # sources find component headers (hiprand, rocrand, ...) that the HIP
+        # compiler root alone does not expose. Also override libhipcxx's guard that
+        # rejects chrono/timing APIs on the (unofficially supported) gfx1103 arch.
+        substituteInPlace CMakeLists.txt \
+          --replace-fail 'set(CMAKE_EXPORT_COMPILE_COMMANDS ON)' \
+                         'set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+    include_directories(SYSTEM ${rocmMerged}/include)
+    add_compile_definitions(_LIBCUDACXX_ALLOW_UNSUPPORTED_ARCHITECTURE)'
   '';
 })
