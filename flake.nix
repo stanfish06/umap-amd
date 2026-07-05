@@ -7,21 +7,24 @@
     { self, nixpkgs, ... }@inputs:
     let
       system = "x86_64-linux";
-      rocgraphOverlay = final: prev: {
+      rocExtraOverlay = final: prev: {
         rocmPackages = prev.rocmPackages.overrideScope (
           rself: rsuper: {
             rocgraph = final.callPackage ./deps/rocGRAPH { };
+            hipraft = final.callPackage ./deps/hipRAFT { };
+            hipmm = final.callPackage ./deps/hipMM { };
+            hipvs = final.callPackage ./deps/hipVS { };
           }
         );
       };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ rocgraphOverlay ];
+        overlays = [ rocExtraOverlay ];
       };
     in
     {
-      overlays.default = rocgraphOverlay;
+      overlays.default = rocExtraOverlay;
       devShells.${system} = {
         default = pkgs.mkShell {
           packages = with pkgs; [
@@ -34,7 +37,10 @@
             cmake
             gcc
             rocmPackages.clr
-            rocmPackages.rocgraph
+            # rocmPackages.rocgraph (not needed for now, can explore later, hipgraph also depends on it)
+            rocmPackages.hipraft
+            rocmPackages.hipmm
+            rocmPackages.hipvs
             rocmPackages.rocprim
             rocmPackages.rocsparse
             rocmPackages.rocthrust

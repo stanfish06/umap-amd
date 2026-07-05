@@ -129,8 +129,6 @@ stdenv.mkDerivation (finalAttrs: {
     "-DFETCHCONTENT_SOURCE_DIR_CUCO=${cucoSrc}"
     "-DOVERRIDE_RAFT_SOURCE_DIR=${raftSrc}"
     "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
-    "-DBUILD_CLIENTS_TESTS=OFF"
-    "-DBUILD_CLIENTS_SAMPLES=OFF"
     "-DROCM_PATH=${rocmMerged}"
     "-DHIP_PATH=${rocmMerged}"
     "-DCMAKE_HIP_COMPILER_ROCM_ROOT=${rocmMerged}"
