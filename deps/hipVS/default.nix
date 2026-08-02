@@ -58,7 +58,7 @@ let
     owner = "ROCm-DS";
     repo = "hipVS";
     rev = "release/rocmds-25.10";
-    hash = "sha256-dZVf1vNyrLWJ/NMj7bQqZUQzXxaHX5ugKduGkG7AG3U=";
+    hash = "sha256-4ImTiW7R4rod52HxqQ7V7gnLinoWXMwEE+EygYd7VMo=";
   };
   fmtSrc = fetchFromGitHub {
     owner = "fmtlib";
@@ -114,7 +114,7 @@ let
     owner = "ROCm-DS";
     repo = "hipRaft";
     rev = "release/rocmds-25.10";
-    hash = "sha256-46LOBQAWE0VYz010ShkL4sjBwEDvn89XSsWRHkteFrI=";
+    hash = "sha256-nbNdcdicDpEx/9AT0AfKfsTHlNx3+D0hV4iDr6b8Jlc=";
   };
   rocmdsLogger = fetchFromGitHub {
     owner = "ROCm-DS";

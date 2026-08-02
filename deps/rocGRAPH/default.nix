@@ -49,7 +49,7 @@ let
     owner = "ROCm-DS";
     repo = "hipRaft";
     rev = "release/rocmds-25.10";
-    hash = "sha256-46LOBQAWE0VYz010ShkL4sjBwEDvn89XSsWRHkteFrI=";
+    hash = "sha256-nbNdcdicDpEx/9AT0AfKfsTHlNx3+D0hV4iDr6b8Jlc=";
   };
   rocmdsLogger = fetchFromGitHub {
     owner = "ROCm-DS";
