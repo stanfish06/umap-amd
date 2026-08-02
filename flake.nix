@@ -10,6 +10,7 @@
       rocExtraOverlay = final: prev: {
         rocmPackages = prev.rocmPackages.overrideScope (
           rself: rsuper: {
+            rocrand = rsuper.rocrand.override { gpuTargets = [ "gfx1103" ]; };
             rocgraph = final.callPackage ./deps/rocGRAPH { };
             hipraft = final.callPackage ./deps/hipRAFT { };
             hipmm = final.callPackage ./deps/hipMM { };
@@ -47,6 +48,14 @@
             rocmPackages.hipcub
             rocmPackages.hiprand
             rocmPackages.rocrand
+            rocmPackages.hipblas
+            rocmPackages.hipblaslt
+            rocmPackages.hipblas-common
+            rocmPackages.hipsparse
+            rocmPackages.hipsolver
+            rocmPackages.rocblas
+            blas
+            lapack
           ];
           shellHook = ''
             export DCMAKE_CXX_COMPILER="${pkgs.rocmPackages.clr}/bin/hipcc"
